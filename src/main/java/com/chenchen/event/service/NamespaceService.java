@@ -7,6 +7,8 @@ import io.vertx.core.Vertx;
 
 public class NamespaceService {
 
+
+
   public void createNamespace(Vertx vertx, String namespace) {
     // start manager vertical
     DeploymentOptions deploymentOptions = new DeploymentOptions()
