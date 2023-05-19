@@ -24,7 +24,7 @@ val vertxVersion = "4.4.3-SNAPSHOT"
 val junitJupiterVersion = "5.9.1"
 
 val mainVerticleName = "com.chenchen.event.MainVerticle"
-val launcherClassName = "io.vertx.core.Launcher"
+val launcherClassName = "com.chenchen.event.launcher.MainLauncher"
 
 val watchForChange = "src/**/*"
 val doOnChange = "${projectDir}/gradlew classes"
