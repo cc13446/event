@@ -20,19 +20,15 @@ public class ManagerVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
-    // start manager vertical
-    DeploymentOptions deploymentOptions = new DeploymentOptions()
-      .setWorker(true)
-      .setInstances(1)
-      .setWorkerPoolSize(1)
-      .setWorkerPoolName("manager-thread");
-
-    Future<String> managerVerticleFuture = vertx.deployVerticle(NamespaceVerticle.class, deploymentOptions);
-
     // start http server
     Future<HttpServer> httpServerFuture = vertx.createHttpServer().requestHandler(getRouter()).listen(8888);
-
-
+    httpServerFuture.andThen(http -> {
+      if (http.succeeded()) {
+        startPromise.complete();
+      } else {
+        startPromise.fail(http.cause());
+      }
+    });
   }
 
 }

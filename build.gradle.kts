@@ -22,6 +22,7 @@ repositories {
 
 val vertxVersion = "4.4.3-SNAPSHOT"
 val junitJupiterVersion = "5.9.1"
+val logVersion = "2.17.2"
 
 val mainVerticleName = "com.chenchen.event.verticle.ManagerVerticle"
 val launcherClassName = "com.chenchen.event.launcher.MainLauncher"
@@ -37,6 +38,11 @@ dependencies {
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-core")
   implementation("io.vertx:vertx-web")
+
+  // log
+  implementation("org.apache.logging.log4j:log4j-slf4j-impl:$logVersion")
+  implementation("com.lmax:disruptor:3.4.1")
+
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }
