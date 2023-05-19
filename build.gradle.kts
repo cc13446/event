@@ -43,6 +43,9 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-slf4j-impl:$logVersion")
   implementation("com.lmax:disruptor:3.4.1")
 
+  // json
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }
