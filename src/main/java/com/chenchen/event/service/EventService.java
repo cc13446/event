@@ -1,5 +1,5 @@
 package com.chenchen.event.service;
 
-public class EventCreateService {
+public class EventService {
 
 }

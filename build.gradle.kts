@@ -23,7 +23,7 @@ repositories {
 val vertxVersion = "4.4.3-SNAPSHOT"
 val junitJupiterVersion = "5.9.1"
 
-val mainVerticleName = "com.chenchen.event.MainVerticle"
+val mainVerticleName = "com.chenchen.event.verticle.ManagerVerticle"
 val launcherClassName = "com.chenchen.event.launcher.MainLauncher"
 
 val watchForChange = "src/**/*"
