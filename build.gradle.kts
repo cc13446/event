@@ -46,6 +46,13 @@ dependencies {
   // json
   implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
 
+  // lombok
+  compileOnly("org.projectlombok:lombok:1.18.26")
+  annotationProcessor("org.projectlombok:lombok:1.18.26")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.26")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
+
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }
