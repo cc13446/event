@@ -18,18 +18,15 @@ public class NamespaceService {
   private NamespaceService(){}
 
   public void create(RoutingContext req, Vertx vertx) {
-
-    logger.debug("recv create namespace string {}", req.body().available());
     NamespaceCreateDTO dto = req.body().asPojo(NamespaceCreateDTO.class);
-    logger.debug("recv create namespace string {}", req.body().asString());
-    logger.debug("recv create namespace dto {}", dto);
-    req.response().end("aa");
+    logger.debug("receive create namespace dto {}", dto);
+    createNamespace(dto, req, vertx);
   }
 
 
 
-  public void createNamespace(Vertx vertx, String namespace) {
-    // start manager vertical
+  public void createNamespace(NamespaceCreateDTO namespaceCreateDTO, RoutingContext req, Vertx vertx) {
+    // start namespace vertical
     DeploymentOptions deploymentOptions = new DeploymentOptions()
       .setWorker(true)
       .setInstances(1)
@@ -37,6 +34,11 @@ public class NamespaceService {
       .setWorkerPoolName("manager-thread");
 
     Future<String> managerVerticleFuture = vertx.deployVerticle(NamespaceVerticle.class, deploymentOptions);
+
+    managerVerticleFuture.onSuccess(s -> {
+      logger.info("create namespace verticle success {}", s);
+      req.response().end(s);
+    });
   }
 
 

@@ -7,6 +7,6 @@ public class NamespaceVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
-
+    startPromise.complete();
   }
 }
