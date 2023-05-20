@@ -1,5 +1,6 @@
 package com.chenchen.event.verticle;
 
+import com.chenchen.event.service.EventService;
 import com.chenchen.event.service.NamespaceService;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpServer;
@@ -25,8 +26,13 @@ public class ManagerVerticle extends AbstractVerticle {
       .end("hello event!"));
 
     // create namespace
-    router.post("/namespace/create").handler(req -> NamespaceService.INS.create(req, vertx));
+    router.post("/namespace/create").handler(req -> NamespaceService.create(req, vertx));
+
+    // publish event
+    router.post("/event/publish").handler(req -> EventService.publish(req, vertx));
+
     return router;
+
   }
 
   @Override
