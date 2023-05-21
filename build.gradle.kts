@@ -49,10 +49,14 @@ dependencies {
   // lombok
   compileOnly("org.projectlombok:lombok:1.18.26")
   annotationProcessor("org.projectlombok:lombok:1.18.26")
-
   testCompileOnly("org.projectlombok:lombok:1.18.26")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
 
+  // config
+  implementation("io.vertx:vertx-config")
+  implementation("io.vertx:vertx-config-yaml")
+
+  // test
   testImplementation("org.assertj:assertj-core:3.11.1")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")

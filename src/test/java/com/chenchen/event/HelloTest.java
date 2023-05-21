@@ -1,5 +1,6 @@
 package com.chenchen.event;
 
+import com.chenchen.event.config.Config;
 import com.chenchen.event.verticle.ManagerVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
@@ -24,12 +25,11 @@ public class HelloTest {
   @Test
   void testHello(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
-    client.request(HttpMethod.GET, 8888, "localhost", "/hello")
+    client.request(HttpMethod.GET, Config.INS.getServer().getPort(), "127.0.0.1", "/hello")
       .compose(req -> req.send().compose(HttpClientResponse::body))
       .onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
         assertThat(buffer.toString()).isEqualTo("hello event!");
         testContext.completeNow();
       })));
   }
-
 }

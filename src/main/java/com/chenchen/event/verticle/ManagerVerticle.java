@@ -1,13 +1,16 @@
 package com.chenchen.event.verticle;
 
+import com.chenchen.event.config.Config;
 import com.chenchen.event.entity.Event;
 import com.chenchen.event.entity.codec.EventCodec;
 import com.chenchen.event.service.EventService;
 import com.chenchen.event.service.NamespaceService;
+import io.vertx.config.ConfigRetriever;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.http.HttpServer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import org.slf4j.Logger;
@@ -16,8 +19,6 @@ import org.slf4j.LoggerFactory;
 public class ManagerVerticle extends AbstractVerticle {
 
   private static final Logger logger= LoggerFactory.getLogger(ManagerVerticle.class);
-
-  private static final int PORT = 8888;
 
   private Router getRouter() {
     Router router = Router.router(vertx);
@@ -41,19 +42,38 @@ public class ManagerVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
+
     // register codec
     logger.info("Register event codec");
     vertx.eventBus().registerDefaultCodec(Event.class, new EventCodec());
 
-    // start http server
-    Future<HttpServer> httpServerFuture = vertx.createHttpServer().requestHandler(getRouter()).listen(PORT);
-    httpServerFuture.andThen(http -> {
-      if (http.succeeded()) {
-        startPromise.complete();
-        logger.info("Http server listen on port {}", PORT);
+    // config
+    ConfigStoreOptions store = new ConfigStoreOptions()
+      .setType("file")
+      .setFormat("yaml")
+      .setConfig(new JsonObject().put("path", "config.yaml"));
+
+    ConfigRetriever retriever = ConfigRetriever.create(vertx, new ConfigRetrieverOptions().addStore(store));
+    retriever.getConfig().onComplete(json -> {
+      if (json.succeeded()) {
+        logger.info("Update config");
+        Config.INS.updateConfig(json.result());
       } else {
-        startPromise.fail(http.cause());
+        logger.error("Get config fail {}", json.cause().getMessage());
+        startPromise.fail(json.cause());
       }
+    }).onSuccess(noUse -> {
+      // start http server
+      int port = Config.INS.getServer().getPort();
+      vertx.createHttpServer().requestHandler(getRouter()).listen(port).onComplete(http -> {
+        if (http.succeeded()) {
+          logger.info("Http server listen on port {}", port);
+          startPromise.complete();
+        } else {
+          logger.error("Create http server fail {}", http.cause().getMessage());
+          startPromise.fail(http.cause());
+        }
+      });
     });
   }
 }
