@@ -3,7 +3,6 @@ package com.chenchen.event.verticle;
 import com.chenchen.event.event.EventManager;
 import com.chenchen.event.namespace.NamespaceManager;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

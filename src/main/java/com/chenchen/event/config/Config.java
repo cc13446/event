@@ -31,6 +31,6 @@ public class Config {
 
   public void updateConfig(JsonObject config) {
     this.server.port = config.getInteger(Server.SERVER_PORT, 8888);
-    logger.info("Set config server port {}", this.server.port);
+    logger.info("Set config server port [{}]", this.server.port);
   }
 }

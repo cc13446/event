@@ -67,7 +67,7 @@ public class ManagerVerticle extends AbstractVerticle {
       int port = Config.INS.getServer().getPort();
       vertx.createHttpServer().requestHandler(getRouter()).listen(port).onComplete(http -> {
         if (http.succeeded()) {
-          logger.info("Http server listen on port {}", port);
+          logger.info("Http server listen on port [{}]", port);
           startPromise.complete();
         } else {
           logger.error("Create http server fail {}", http.cause().getMessage());

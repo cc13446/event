@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class NamespaceCreateDTO {
 
-  private String name;
+  private String namespace;
 
 }
