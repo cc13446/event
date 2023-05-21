@@ -53,6 +53,7 @@ dependencies {
   testCompileOnly("org.projectlombok:lombok:1.18.26")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
 
+  testImplementation("org.assertj:assertj-core:3.11.1")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }

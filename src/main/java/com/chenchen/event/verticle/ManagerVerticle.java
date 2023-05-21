@@ -42,6 +42,7 @@ public class ManagerVerticle extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) {
     // register codec
+    logger.info("Register event codec");
     vertx.eventBus().registerDefaultCodec(Event.class, new EventCodec());
 
     // start http server
