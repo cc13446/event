@@ -1,8 +1,12 @@
 package com.chenchen.event.verticle;
 
+import com.chenchen.event.entity.Event;
+import com.chenchen.event.entity.codec.EventCodec;
 import com.chenchen.event.service.EventService;
 import com.chenchen.event.service.NamespaceService;
-import io.vertx.core.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -37,6 +41,9 @@ public class ManagerVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
+    // register codec
+    vertx.eventBus().registerDefaultCodec(Event.class, new EventCodec());
+
     // start http server
     Future<HttpServer> httpServerFuture = vertx.createHttpServer().requestHandler(getRouter()).listen(PORT);
     httpServerFuture.andThen(http -> {
