@@ -26,7 +26,7 @@ public class NamespaceService {
     logger.info("Create namespace verticle fail {}", message);
     req.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code())
       .putHeader("content-type", "text/plain")
-      .end("Create namespace verticle fail" + message);
+      .end("Create namespace verticle fail " + message);
   }
 
   public static void create(RoutingContext req, Vertx vertx) {
@@ -35,7 +35,7 @@ public class NamespaceService {
 
     // check namespace has
     Future<String> checkNameSpaceFuture = vertx.executeBlocking(promise -> {
-      if (NamespaceManager.hasNamespace(dto.getNamespace())) {
+      if (NamespaceManager.preCreateNamespace(dto.getNamespace())) {
         promise.complete("The namespace is available");
       } else {
         promise.fail("The namespace has been created");
@@ -62,7 +62,21 @@ public class NamespaceService {
 
         // create success
         managerVerticleFuture.onSuccess(success -> {
-          createNamespaceSuccess(req, success);
+          logger.info("Success to create namespace [{}] verticle id [{}]", dto.getNamespace(), success);
+          if (NamespaceManager.updateNamespace(dto.getNamespace(), success)) {
+            createNamespaceSuccess(req, success);
+          } else {
+            // should roll back
+            logger.info("Roll back create namespace [{}] verticle id [{}]", dto.getNamespace(), success);
+            vertx.undeploy(success).onComplete(r -> {
+              if (r.succeeded()) {
+                logger.info("Roll back verticle id [{}] success", success);
+              } else {
+                logger.info("Roll back verticle id [{}] fail", success);
+              }
+            });
+            createNamespaceFail(req, "The namespace verticle will be roll back");
+          }
         });
     });
   }
