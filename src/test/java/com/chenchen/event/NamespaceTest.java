@@ -1,14 +1,12 @@
 package com.chenchen.event;
 
 import com.chenchen.event.config.Config;
-import com.chenchen.event.dto.NamespaceCreateDTO;
 import com.chenchen.event.namespace.NamespaceManager;
 import com.chenchen.event.verticle.ManagerVerticle;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
-import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
