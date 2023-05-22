@@ -56,6 +56,9 @@ dependencies {
   implementation("io.vertx:vertx-config")
   implementation("io.vertx:vertx-config-yaml")
 
+  // utils
+  implementation("org.apache.commons:commons-lang3:3.12.0")
+
   // test
   testImplementation("org.assertj:assertj-core:3.11.1")
   testImplementation("io.vertx:vertx-junit5")

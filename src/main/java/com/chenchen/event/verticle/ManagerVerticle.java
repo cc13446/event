@@ -33,6 +33,9 @@ public class ManagerVerticle extends AbstractVerticle {
     // create namespace
     router.post("/namespace/create").handler(req -> NamespaceService.create(req, vertx));
 
+    // delete namespace
+    router.post("/namespace/delete").handler(req -> NamespaceService.delete(req, vertx));
+
     // publish event
     router.post("/event/publish").handler(req -> EventService.publish(req, vertx));
 

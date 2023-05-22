@@ -29,4 +29,9 @@ public class NamespaceManager {
   public static String getNamespaceVerticleId(String namespace) {
     return namespaceMap.get(namespace);
   }
+
+  public static boolean removeNamespace(String namespace, String id) {
+    return namespaceMap.containsKey(namespace) && id.equals(namespaceMap.remove(namespace));
+  }
+
 }
