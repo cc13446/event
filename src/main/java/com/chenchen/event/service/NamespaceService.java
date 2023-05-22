@@ -20,22 +20,20 @@ public class NamespaceService {
 
   private NamespaceService(){}
 
+  private static void requestSuccess(RoutingContext req, String body) {
+    req.response().putHeader("content-type", "text/plain").end(body);
+  }
+
+  private static void requestFail(RoutingContext req, String message) {
+    req.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code())
+      .putHeader("content-type", "text/plain")
+      .end(message);
+  }
+
   @Data
   private static class NamespaceCreate {
     private NamespaceCreateDTO dto;
     private String verticleId;
-  }
-
-  private static void createNamespaceSuccess(RoutingContext req, String id) {
-    logger.info("Create namespace verticle success, id {}", id);
-    req.response().putHeader("content-type", "text/plain").end(id);
-  }
-
-  private static void createNamespaceFail(RoutingContext req, String message) {
-    logger.info("Create namespace verticle fail : {}", message);
-    req.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code())
-      .putHeader("content-type", "text/plain")
-      .end("Create namespace verticle fail : " + message);
   }
 
   public static void create(RoutingContext req, Vertx vertx) {
@@ -111,28 +109,22 @@ public class NamespaceService {
     });
 
     // update success
-    updateNamespaceManagerFuture.onSuccess(create -> createNamespaceSuccess(req, create.getVerticleId()));
+    updateNamespaceManagerFuture.onSuccess(create -> {
+      logger.info("Create namespace verticle success, id {}", create.getVerticleId());
+      requestSuccess(req, create.getVerticleId());
+    });
 
     // update fail
-    updateNamespaceManagerFuture.onFailure(fail -> createNamespaceFail(req, fail.getMessage()));
+    updateNamespaceManagerFuture.onFailure(fail -> {
+      logger.info("Create namespace verticle fail : {}", fail.getMessage());
+      requestFail(req, fail.getMessage());
+    });
   }
 
   @Data
   private static class NamespaceDelete {
     private NamespaceDeleteDTO dto;
     private String verticleId;
-  }
-
-  private static void deleteNamespaceSuccess(RoutingContext req, String id) {
-    logger.info("Delete namespace verticle success, id {}", id);
-    req.response().putHeader("content-type", "text/plain").end(id);
-  }
-
-  private static void deleteNamespaceFail(RoutingContext req, String message) {
-    logger.info("Delete namespace verticle fail : {}", message);
-    req.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code())
-      .putHeader("content-type", "text/plain")
-      .end("Delete namespace verticle fail : " + message);
   }
 
   public static void delete(RoutingContext req, Vertx vertx) {
@@ -193,9 +185,16 @@ public class NamespaceService {
     });
 
     // update success
-    updateNamespaceManagerFuture.onSuccess(delete -> deleteNamespaceSuccess(req, delete.getVerticleId()));
+    updateNamespaceManagerFuture.onSuccess(delete -> {
+      logger.info("Delete namespace verticle success, id {}", delete.getVerticleId());
+      requestSuccess(req, delete.getVerticleId());
+    });
 
     // update fail
-    updateNamespaceManagerFuture.onFailure(fail -> deleteNamespaceFail(req, fail.getMessage()));
+    updateNamespaceManagerFuture.onFailure(fail -> {
+      logger.info("Delete namespace verticle fail : {}", fail.getMessage());
+      requestFail(req, fail.getMessage());
+    });
+
   }
 }
