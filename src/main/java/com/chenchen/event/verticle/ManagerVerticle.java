@@ -27,7 +27,7 @@ public class ManagerVerticle extends AbstractVerticle {
 
     // hello
     router.get("/hello").handler(req -> req.response()
-      .putHeader("content-type", "text/plain")
+      .putHeader("Content-Type", "text/plain")
       .end("hello event!"));
 
     // create namespace

@@ -7,7 +7,7 @@ public class NamespaceManager {
 
   public static final String NAMESPACE = "namespace";
 
-  private static final String FAKE_ID = "fake_id";
+  public static final String FAKE_ID = "fake_id";
 
   // key namespace
   // value verticle id
@@ -24,5 +24,9 @@ public class NamespaceManager {
     }
     namespaceMap.put(namespace, id);
     return true;
+  }
+
+  public static String getNamespaceVerticleId(String namespace) {
+    return namespaceMap.get(namespace);
   }
 }
