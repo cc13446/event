@@ -13,7 +13,6 @@ public class NamespaceManager {
   // value verticle id
   private static final Map<String, String> namespaceMap = new ConcurrentHashMap<>();
 
-
   public static boolean preCreateNamespace(String namespace) {
     return namespaceMap.putIfAbsent(namespace, FAKE_ID) == null;
   }
@@ -26,5 +25,4 @@ public class NamespaceManager {
     namespaceMap.put(namespace, id);
     return true;
   }
-
 }
