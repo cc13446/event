@@ -41,7 +41,7 @@ public class NamespaceTest {
 
   @Test
   void createNamespaceSuccess(Vertx vertx, VertxTestContext testContext) {
-    String testNs = "testSuccess";
+    String testNs = "testCreateSuccess";
     postCreateNamespace(vertx, testNs).onComplete(testContext.succeeding(res -> testContext.verify(() -> {
       String id = NamespaceManager.getNamespaceVerticleId(testNs);
       assertThat(id).isNotEqualTo(null).isNotEqualTo(NamespaceManager.FAKE_ID).isEqualTo(res);
@@ -51,7 +51,7 @@ public class NamespaceTest {
 
   @Test
   void createNamespaceFail(Vertx vertx, VertxTestContext testContext) {
-    String testNs = "testFail";
+    String testNs = "testCreateFail";
     postCreateNamespace(vertx, testNs).compose(res -> {
       String id = NamespaceManager.getNamespaceVerticleId(testNs);
       assertThat(id).isNotEqualTo(null).isNotEqualTo(NamespaceManager.FAKE_ID).isEqualTo(res);
@@ -62,6 +62,48 @@ public class NamespaceTest {
         assertThat(res.succeeded()).isEqualTo(false);
         assertThat(id.result()).isNotEqualTo(null).isNotEqualTo(NamespaceManager.FAKE_ID)
           .isEqualTo(NamespaceManager.getNamespaceVerticleId(testNs));
+        testContext.completeNow();
+      }));
+    });
+  }
+
+  private Future<String> postDeleteNamespace(Vertx vertx, String ns) {
+    HttpClient client = vertx.createHttpClient();
+    return client.request(HttpMethod.POST, Config.INS.getServer().getPort(), "127.0.0.1", "/namespace/delete").compose(req -> {
+      JsonObject body = new JsonObject();
+      body.put("namespace", ns);
+      return req.putHeader("Content-Type", "application/json").send(body.encode());
+    }).compose(response -> {
+      if (response.statusCode() == HttpResponseStatus.OK.code()) {
+        return response.body().compose(buffer -> Future.succeededFuture(buffer.toString()));
+      }
+      return response.body().compose(buffer -> Future.failedFuture("Delete namespace fail : " + buffer.toString()));
+    });
+  }
+
+  @Test
+  void deleteNamespaceFail(Vertx vertx, VertxTestContext testContext) {
+    String testNs = "testDeleteFail";
+    postDeleteNamespace(vertx, testNs).onComplete(res -> testContext.verify(() -> {
+      String id = NamespaceManager.getNamespaceVerticleId(testNs);
+      assertThat(id).isEqualTo(null);
+      assertThat(res.succeeded()).isEqualTo(false);
+      testContext.completeNow();
+    }));
+  }
+
+  @Test
+  void deleteNamespaceCreate(Vertx vertx, VertxTestContext testContext) {
+    String testNs = "testDeleteSuccess";
+    postCreateNamespace(vertx, testNs).compose(res -> {
+      String id = NamespaceManager.getNamespaceVerticleId(testNs);
+      assertThat(id).isNotEqualTo(null).isNotEqualTo(NamespaceManager.FAKE_ID).isEqualTo(res);
+      return Future.succeededFuture(id);
+    }).onComplete(id -> {
+      assertThat(id.succeeded()).isEqualTo(true);
+      postDeleteNamespace(vertx, testNs).onComplete(res -> testContext.verify(() -> {
+        assertThat(res.succeeded()).isEqualTo(true);
+        assertThat(res.result()).isNotEqualTo(null).isNotEqualTo(NamespaceManager.FAKE_ID).isEqualTo(id.result());
         testContext.completeNow();
       }));
     });
