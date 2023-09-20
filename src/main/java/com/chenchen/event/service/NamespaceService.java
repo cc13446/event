@@ -16,9 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NamespaceService {
-  private static final Logger logger= LoggerFactory.getLogger(NamespaceService.class);
+  private static final Logger logger = LoggerFactory.getLogger(NamespaceService.class);
 
-  private NamespaceService(){}
+  private NamespaceService() {
+  }
 
   private static void requestSuccess(RoutingContext req, String body) {
     req.response().putHeader("content-type", "text/plain").end(body);
@@ -195,6 +196,5 @@ public class NamespaceService {
       logger.info("Delete namespace verticle fail : {}", fail.getMessage());
       requestFail(req, fail.getMessage());
     });
-
   }
 }

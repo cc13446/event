@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class NamespaceVerticle extends AbstractVerticle {
 
-  private static Logger logger = LoggerFactory.getLogger(NamespaceVerticle.class);
+  private static final Logger logger = LoggerFactory.getLogger(NamespaceVerticle.class);
 
   @Override
   public void start() {

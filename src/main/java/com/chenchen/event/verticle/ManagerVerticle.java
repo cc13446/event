@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class ManagerVerticle extends AbstractVerticle {
 
-  private static final Logger logger= LoggerFactory.getLogger(ManagerVerticle.class);
+  private static final Logger logger = LoggerFactory.getLogger(ManagerVerticle.class);
 
   private Router getRouter() {
     Router router = Router.router(vertx);
